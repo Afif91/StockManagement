@@ -1,4 +1,4 @@
-import { computed, makeAutoObservable } from 'mobx';
+import { computed, makeAutoObservable, action } from 'mobx';
 import axios from 'axios';
 import { ResponseModel } from '../types/ResponseModel';
 import { Stock } from '../types/Stock';
@@ -21,7 +21,17 @@ class PortfolioStore {
   backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api';
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      setFilters: action,
+      setSearchTerm: action,
+      fetchPortfolio: action,
+      addStock: action,
+      editStock: action,
+      removeStock: action,
+      fetchStockDetails: action,
+      setLoading: action,
+      setError: action,
+    });
   }
 
   setFilters(filters: Filters) {
@@ -81,7 +91,7 @@ class PortfolioStore {
         `${this.backendUrl}/portfolio/${userId}`
       );
       if (response.data.success) {
-        this.portfolio = response.data.data || [];
+        this.setPortfolio(response.data.data || []);
       } else {
         this.setError(response.data.message || ERROR_MESSAGES.FETCH_PORTFOLIO);
       }
@@ -100,7 +110,7 @@ class PortfolioStore {
       );
       if (response.data.success) {
         if (response.data.data) {
-          this.portfolio.push(response.data.data);
+          this.addPortfolioStock(response.data.data);
         } else {
           this.setError('Failed to add stock.');
         }
@@ -119,13 +129,10 @@ class PortfolioStore {
         updatedStock
       );
       if (response.data.success) {
-        const index = this.portfolio.findIndex(stock => stock._id === id);
-        if (index > -1) {
-          if (response.data.data) {
-            this.portfolio[index] = response.data.data;
-          } else {
-            this.setError('Failed to update stock.');
-          }
+        if (response.data.data) {
+          this.updatePortfolioStock(id, response.data.data);
+        } else {
+          this.setError('Failed to update stock.');
         }
       } else {
         this.setError(response.data.message ?? 'An error occurred.');
@@ -141,7 +148,7 @@ class PortfolioStore {
         `${this.backendUrl}/portfolio/${id}`
       );
       if (response.data.success) {
-        this.portfolio = this.portfolio.filter(stock => stock._id !== id);
+        this.deletePortfolioStock(id);
       } else {
         this.setError(response.data.message ?? 'An error occurred.');
       }
@@ -158,7 +165,7 @@ class PortfolioStore {
         `${this.backendUrl}/portfolio/stockDetails/${symbol}`
       );
       if (response.data.success) {
-        this.stockDetails = response.data.data ?? null;
+        this.setStockDetails(response.data.data ?? null);
       } else {
         this.setError(response.data.message ?? 'An error occurred.');
       }
@@ -169,10 +176,38 @@ class PortfolioStore {
     }
   }
 
+  // Action to update portfolio
+  setPortfolio(stocks: Stock[]) {
+    this.portfolio = stocks;
+  }
+
+  // Action to add a stock
+  addPortfolioStock(stock: Stock) {
+    this.portfolio.push(stock);
+  }
+
+  // Action to update a stock in portfolio
+  updatePortfolioStock(id: string, updatedStock: Stock) {
+    const index = this.portfolio.findIndex(stock => stock._id === id);
+    if (index > -1) {
+      this.portfolio[index] = updatedStock;
+    }
+  }
+
+  // Action to delete a stock from portfolio
+  deletePortfolioStock(id: string) {
+    this.portfolio = this.portfolio.filter(stock => stock._id !== id);
+  }
+
+  // Action to set stock details
+  setStockDetails(stock: Stock | null) {
+    this.stockDetails = stock;
+  }
+
   setLoading(value: boolean) {
     this.loading = value;
   }
-  
+
   setError(message: string | null) {
     this.error = message;
   }

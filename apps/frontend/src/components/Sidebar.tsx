@@ -13,8 +13,6 @@ import {
   RedoOutlined,
 } from '@ant-design/icons';
 
-const { Panel } = Collapse;
-
 const Sidebar: React.FC = observer(() => {
   const [symbolFilter, setSymbolFilter] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
@@ -39,6 +37,74 @@ const Sidebar: React.FC = observer(() => {
     });
   };
 
+  // Define items for Collapse
+  const collapseItems = [
+    {
+      key: '1',
+      label: (
+        <>
+          <TagOutlined /> Symbol
+        </>
+      ),
+      children: (
+        <Input
+          placeholder="Enter symbol"
+          value={symbolFilter}
+          onChange={(e) => setSymbolFilter(e.target.value)}
+          style={{ marginBottom: '10px' }}
+        />
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <>
+          <DollarOutlined /> Price Range
+        </>
+      ),
+      children: (
+        <>
+          <Slider
+            range
+            min={0}
+            max={1000}
+            step={10}
+            value={priceRange}
+            onChange={(value: number[]) => setPriceRange(value as [number, number])}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+            <span>Min: ${priceRange[0]}</span>
+            <span>Max: ${priceRange[1]}</span>
+          </div>
+        </>
+      ),
+    },
+    {
+      key: '3',
+      label: (
+        <>
+          <ShoppingCartOutlined /> Quantity Range
+        </>
+      ),
+      children: (
+        <>
+          <Slider
+            range
+            min={0}
+            max={100}
+            step={1}
+            value={quantityRange}
+            onChange={(value: number[]) => setQuantityRange(value as [number, number])}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+            <span>Min: {quantityRange[0]}</span>
+            <span>Max: {quantityRange[1]}</span>
+          </div>
+        </>
+      ),
+    },
+  ];
+
   return (
     <div className="sidebar">
       {/* Navigation Section */}
@@ -60,49 +126,7 @@ const Sidebar: React.FC = observer(() => {
         <h3>
           <FilterOutlined style={{ marginRight: '5px' }} /> Filters
         </h3>
-        <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
-          {/* Symbol Filter */}
-          <Panel header={<><TagOutlined /> Symbol</>} key="1">
-            <Input
-              placeholder="Enter symbol"
-              value={symbolFilter}
-              onChange={(e) => setSymbolFilter(e.target.value)}
-              style={{ marginBottom: '10px' }}
-            />
-          </Panel>
-
-          {/* Price Range Filter */}
-          <Panel header={<><DollarOutlined /> Price Range</>} key="2">
-            <Slider
-              range
-              min={0}
-              max={1000}
-              step={10}
-              value={priceRange}
-              onChange={(value: number[]) => setPriceRange(value as [number, number])}
-            />
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-              <span>Min: ${priceRange[0]}</span>
-              <span>Max: ${priceRange[1]}</span>
-            </div>
-          </Panel>
-
-          {/* Quantity Range Filter */}
-          <Panel header={<><ShoppingCartOutlined /> Quantity Range</>} key="3">
-            <Slider
-              range
-              min={0}
-              max={100}
-              step={1}
-              value={quantityRange}
-              onChange={(value: number[]) => setQuantityRange(value as [number, number])}
-            />
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-              <span>Min: {quantityRange[0]}</span>
-              <span>Max: {quantityRange[1]}</span>
-            </div>
-          </Panel>
-        </Collapse>
+        <Collapse bordered={false} items={collapseItems} />
 
         {/* Buttons Section */}
         <div className="buttons">

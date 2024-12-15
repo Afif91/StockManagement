@@ -1,14 +1,19 @@
 .analytics-page {
-    padding: 20px;
-  
-    h2 {
-      margin-bottom: 20px;
-      color: #595959;
-    }
-  
-    .ant-card {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 500;
-    }
-  }  
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #595959;
+  }
+
+  .ant-card {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .analytics-cards {
+    display: flex;
+    gap: 20px;
+  }
+}

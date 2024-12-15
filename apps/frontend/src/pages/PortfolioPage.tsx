@@ -3,6 +3,7 @@ import { Table, Button, Modal, Form, Input, Spin, Alert } from 'antd';
 import { portfolioStore } from '../stores/PortfolioStore';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
+import './PortfolioPage.scss';
 
 const { Search } = Input;
 

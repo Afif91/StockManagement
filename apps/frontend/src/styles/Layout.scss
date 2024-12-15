@@ -7,13 +7,13 @@
     background-color: #f7f9fc;
     padding: 20px;
     border-right: 1px solid #d9d9d9;
-  
+
     .sidebar-navigation {
       margin-bottom: 30px;
-  
+
       .sidebar-item {
         margin-bottom: 15px;
-  
+
         a {
           display: flex;
           align-items: center;
@@ -21,14 +21,14 @@
           font-size: 16px;
           color: #595959;
           text-decoration: none;
-  
+
           &:hover {
             color: #1890ff;
           }
         }
       }
     }
-  
+
     .sidebar-filters {
       h3 {
         font-size: 18px;
@@ -36,37 +36,37 @@
         display: flex;
         align-items: center;
       }
-  
+
       .ant-collapse {
         background-color: #fff;
         border: none;
-  
+
         .ant-collapse-header {
           display: flex;
           align-items: center;
           font-size: 16px;
         }
-  
+
         .ant-collapse-content {
           padding: 10px 20px;
         }
       }
-  
+
       .ant-slider {
         margin: 10px 0;
       }
-  
+
       .buttons {
         display: flex;
         justify-content: flex-start;
         margin-top: 20px;
-  
+
         button {
           font-size: 14px;
         }
       }
     }
-  }  
+  }
 
   .content {
     flex: 1;

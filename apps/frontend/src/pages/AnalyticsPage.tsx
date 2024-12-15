@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { portfolioStore } from '../stores/PortfolioStore';
 import { Card } from 'antd';
+import '../styles/AnalyticsPage.scss';
 
 const AnalyticsPage: React.FC = observer(() => {
   const totalValue = portfolioStore.portfolio.reduce(
@@ -17,9 +18,9 @@ const AnalyticsPage: React.FC = observer(() => {
     : 0;
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="analytics-page">
       <h2>Portfolio Analytics</h2>
-      <div style={{ display: 'flex', gap: '20px' }}>
+      <div className="analytics-cards">
         <Card title="Total Portfolio Value" style={{ width: 300 }}>
           ${totalValue.toFixed(2)}
         </Card>
