@@ -2,7 +2,18 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import { portfolioStore } from '../stores/PortfolioStore';
-import { PieChartOutlined, FilterOutlined, DollarOutlined } from '@ant-design/icons';
+import { Slider, Collapse, Input, Button } from 'antd';
+import {
+  PieChartOutlined,
+  FilterOutlined,
+  DollarOutlined,
+  TagOutlined,
+  ShoppingCartOutlined,
+  CheckOutlined,
+  RedoOutlined,
+} from '@ant-design/icons';
+
+const { Panel } = Collapse;
 
 const Sidebar: React.FC = observer(() => {
   const [symbolFilter, setSymbolFilter] = useState('');
@@ -14,6 +25,17 @@ const Sidebar: React.FC = observer(() => {
       symbol: symbolFilter,
       priceRange,
       quantityRange,
+    });
+  };
+
+  const resetFilters = () => {
+    setSymbolFilter('');
+    setPriceRange([0, 1000]);
+    setQuantityRange([0, 100]);
+    portfolioStore.setFilters({
+      symbol: '',
+      priceRange: [0, 1000],
+      quantityRange: [0, 100],
     });
   };
 
@@ -38,55 +60,68 @@ const Sidebar: React.FC = observer(() => {
         <h3>
           <FilterOutlined style={{ marginRight: '5px' }} /> Filters
         </h3>
+        <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
+          {/* Symbol Filter */}
+          <Panel header={<><TagOutlined /> Symbol</>} key="1">
+            <Input
+              placeholder="Enter symbol"
+              value={symbolFilter}
+              onChange={(e) => setSymbolFilter(e.target.value)}
+              style={{ marginBottom: '10px' }}
+            />
+          </Panel>
 
-        {/* Symbol Filter */}
-        <div className="filter-item">
-          <label>Symbol:</label>
-          <input
-            type="text"
-            value={symbolFilter}
-            onChange={(e) => setSymbolFilter(e.target.value)}
-            placeholder="Enter symbol"
-          />
+          {/* Price Range Filter */}
+          <Panel header={<><DollarOutlined /> Price Range</>} key="2">
+            <Slider
+              range
+              min={0}
+              max={1000}
+              step={10}
+              value={priceRange}
+              onChange={(value: number[]) => setPriceRange(value as [number, number])}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+              <span>Min: ${priceRange[0]}</span>
+              <span>Max: ${priceRange[1]}</span>
+            </div>
+          </Panel>
+
+          {/* Quantity Range Filter */}
+          <Panel header={<><ShoppingCartOutlined /> Quantity Range</>} key="3">
+            <Slider
+              range
+              min={0}
+              max={100}
+              step={1}
+              value={quantityRange}
+              onChange={(value: number[]) => setQuantityRange(value as [number, number])}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+              <span>Min: {quantityRange[0]}</span>
+              <span>Max: {quantityRange[1]}</span>
+            </div>
+          </Panel>
+        </Collapse>
+
+        {/* Buttons Section */}
+        <div className="buttons">
+          <Button
+            type="primary"
+            icon={<CheckOutlined />}
+            onClick={applyFilters}
+            style={{ marginRight: '10px' }}
+          >
+            Apply
+          </Button>
+          <Button
+            type="default"
+            icon={<RedoOutlined />}
+            onClick={resetFilters}
+          >
+            Reset
+          </Button>
         </div>
-
-        {/* Price Range Filter */}
-        <div className="filter-item">
-          <label>Price Range:</label>
-          <input
-            type="number"
-            value={priceRange[0]}
-            onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-            placeholder="Min price"
-          />
-          <input
-            type="number"
-            value={priceRange[1]}
-            onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-            placeholder="Max price"
-          />
-        </div>
-
-        {/* Quantity Range Filter */}
-        <div className="filter-item">
-          <label>Quantity Range:</label>
-          <input
-            type="number"
-            value={quantityRange[0]}
-            onChange={(e) => setQuantityRange([Number(e.target.value), quantityRange[1]])}
-            placeholder="Min quantity"
-          />
-          <input
-            type="number"
-            value={quantityRange[1]}
-            onChange={(e) => setQuantityRange([quantityRange[0], Number(e.target.value)])}
-            placeholder="Max quantity"
-          />
-        </div>
-
-        <button onClick={applyFilters} className="apply-filters-button">
-          Apply Filters
-        </button>
       </div>
     </div>
   );
