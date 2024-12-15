@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Spin, Alert } from 'antd';
+import { Table, Button, Modal, Form, Input, Tooltip, Spin, Alert } from 'antd';
 import { portfolioStore } from '../stores/PortfolioStore';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
+import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import './PortfolioPage.scss';
 
 const { Search } = Input;
@@ -12,10 +13,10 @@ const PortfolioPage: React.FC = observer(() => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingStock, setEditingStock] = useState<any>(null);
   const [form] = Form.useForm();
-  const [searchTerm, setSearchTerm] = useState(''); // State for search term
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    portfolioStore.fetchPortfolio(portfolioStore.userId); // Fetch portfolio on load
+    portfolioStore.fetchPortfolio(portfolioStore.userId);
   }, []);
 
   const handleSearch = (value: string) => {
@@ -62,35 +63,40 @@ const PortfolioPage: React.FC = observer(() => {
       title: 'Actions',
       key: 'actions',
       render: (_: any, record: any) => (
-        <div>
-          <Button
-            type="link"
-            onClick={() => {
-              setIsEditing(true);
-              setEditingStock(record);
-              setIsModalVisible(true);
-              form.setFieldsValue(record);
-            }}
-          >
-            Edit
-          </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => portfolioStore.removeStock(record._id)}
-          >
-            Remove
-          </Button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {/* Edit Icon */}
+          <Tooltip title="Edit Stock">
+            <Button
+              type="text"
+              icon={<EditOutlined />}
+              onClick={() => {
+                setIsEditing(true);
+                setEditingStock(record);
+                setIsModalVisible(true);
+                form.setFieldsValue(record);
+              }}
+            />
+          </Tooltip>
+
+          {/* Delete Icon */}
+          <Tooltip title="Remove Stock">
+            <Button
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => portfolioStore.removeStock(record._id)}
+            />
+          </Tooltip>
         </div>
       ),
     },
   ];
 
   return (
-    <div className="portfolio-page">
+    <div className="portfolio-page">    
     {portfolioStore.loading && <Spin size="large" />}
     {portfolioStore.error && <Alert message={portfolioStore.error} type="error" />}
-    <div className="header">Stock Portfolio</div>
+      <div className="header">Stock Portfolio</div>
       <div className="search-bar">
         <Search
           placeholder="Search stocks"
@@ -101,17 +107,20 @@ const PortfolioPage: React.FC = observer(() => {
       </div>
 
       {/* Add Stock Button */}
-      <Button
-        type="primary"
-        onClick={() => {
-          setIsEditing(false);
-          setIsModalVisible(true);
-          form.resetFields();
-        }}
-        style={{ marginBottom: '20px' }}
-      >
-        Add Stock
-      </Button>
+      <Tooltip title="Add New Stock">
+        <Button
+          type="primary"
+          icon={<PlusCircleOutlined />}
+          onClick={() => {
+            setIsEditing(false);
+            setIsModalVisible(true);
+            form.resetFields();
+          }}
+          style={{ marginBottom: '20px' }}
+        >
+          Add Stock
+        </Button>
+      </Tooltip>
 
       {/* Table */}
       <Table

@@ -22,7 +22,13 @@
     margin-bottom: 20px;
   }
 
-  .ant-spin {
-    margin-bottom: 20px;
+  .ant-tooltip {
+    display: inline-block;
+  }
+
+  .ant-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
