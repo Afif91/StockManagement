@@ -3,36 +3,80 @@
   height: 100vh;
 
   .sidebar {
-    width: 200px;
-    background-color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
-
-    .sidebar-item {
-      margin: 10px 0;
-      padding: 10px;
-      background-color: white;
-      border-radius: 5px;
-      text-align: center;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #e0e0e0;
+    width: 250px;
+    background-color: #f7f9fc;
+    padding: 20px;
+    border-right: 1px solid #d9d9d9;
+  
+    .sidebar-navigation {
+      margin-bottom: 30px;
+  
+      .sidebar-item {
+        margin-bottom: 15px;
+  
+        a {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 16px;
+          color: #595959;
+          text-decoration: none;
+  
+          &:hover {
+            color: #1890ff;
+          }
+        }
       }
     }
-
-    .logout {
-      background-color: #ff4d4f;
-      color: white;
-      font-weight: bold;
-
-      &:hover {
-        background-color: #ff7875;
+  
+    .sidebar-filters {
+      h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+      }
+  
+      .filter-item {
+        margin-bottom: 15px;
+  
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 500;
+          color: #595959;
+        }
+  
+        input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          outline: none;
+  
+          &:focus {
+            border-color: #1890ff;
+          }
+        }
+      }
+  
+      .apply-filters-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #1890ff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+  
+        &:hover {
+          background-color: #40a9ff;
+        }
       }
     }
   }
+  
 
   .content {
     flex: 1;

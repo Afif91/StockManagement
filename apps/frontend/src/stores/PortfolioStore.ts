@@ -1,11 +1,19 @@
-import { makeAutoObservable } from 'mobx';
+import { computed, makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import { ResponseModel } from '../types/ResponseModel';
 import { Stock } from '../types/Stock';
 import { DEFAULT_USER_ID, ERROR_MESSAGES } from '../constants';
 
+interface Filters {
+  symbol?: string;
+  priceRange?: [number, number];
+  quantityRange?: [number, number];
+}
+
 class PortfolioStore {
   portfolio: Stock[] = [];
+  filters: Filters = {};
+  searchTerm = ''; // State for search term
   stockDetails: Stock | null = null;
   loading = false;
   error: string | null = null;
@@ -14,6 +22,55 @@ class PortfolioStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setFilters(filters: Filters) {
+    this.filters = filters;
+  }
+
+  setSearchTerm(term: string) {
+    this.searchTerm = term;
+  }
+
+  @computed get filteredPortfolio(): Stock[] {
+    const { symbol, priceRange, quantityRange } = this.filters;
+    const searchTermLower = this.searchTerm.toLowerCase();
+
+    return this.portfolio.filter((stock) => {
+      let matches = true;
+
+      // Search Term Filter
+      if (
+        searchTermLower &&
+        !stock.name.toLowerCase().includes(searchTermLower) &&
+        !stock.symbol.toLowerCase().includes(searchTermLower)
+      ) {
+        matches = false;
+      }
+
+      // Symbol Filter
+      if (symbol && !stock.symbol.toLowerCase().includes(symbol.toLowerCase())) {
+        matches = false;
+      }
+
+      // Price Range Filter
+      if (
+        priceRange &&
+        (stock.price < priceRange[0] || stock.price > priceRange[1])
+      ) {
+        matches = false;
+      }
+
+      // Quantity Range Filter
+      if (
+        quantityRange &&
+        (stock.quantity < quantityRange[0] || stock.quantity > quantityRange[1])
+      ) {
+        matches = false;
+      }
+
+      return matches;
+    });
   }
 
   async fetchPortfolio(userId: string) {

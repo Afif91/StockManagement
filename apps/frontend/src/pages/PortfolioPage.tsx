@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Table, Button, Modal, Form, Spin, Alert } from 'antd';
+import { Table, Button, Modal, Form, Input, Spin, Alert } from 'antd';
 import { portfolioStore } from '../stores/PortfolioStore';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
@@ -18,16 +18,12 @@ const PortfolioPage: React.FC = observer(() => {
   }, []);
 
   const handleSearch = (value: string) => {
-    setSearchTerm(value); // Update search term on user input
+    setSearchTerm(value);
+    portfolioStore.setSearchTerm(value); // Pass the search term to the store
   };
 
-  const filteredPortfolio = portfolioStore.portfolio.filter(stock =>
-    stock.name.toLowerCase().includes(searchTerm.toLowerCase()) || // Search by name
-    stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) // Search by Symbol
-  );
-
   const handleAddStock = () => {
-    form.validateFields().then(values => {
+    form.validateFields().then((values) => {
       if (isEditing) {
         portfolioStore.editStock(editingStock._id, values);
         setIsEditing(false);
@@ -44,7 +40,7 @@ const PortfolioPage: React.FC = observer(() => {
       title: 'Symbol',
       dataIndex: 'symbol',
       key: 'symbol',
-      render: (text: string) => <Link to={`/stock/${text}`}>{text}</Link>, // Navigate to stock details page
+      render: (text: string) => <Link to={`/stock/${text}`}>{text}</Link>,
     },
     {
       title: 'Name',
@@ -90,18 +86,20 @@ const PortfolioPage: React.FC = observer(() => {
   ];
 
   return (
-    <div>
-      {portfolioStore.loading && <Spin size="large" />}
-      {portfolioStore.error && <Alert message={portfolioStore.error} type="error" />}
-      <div className="header">Your Stock Portfolio</div>
-      <div className="search">
+    <div className="portfolio-page">
+    {portfolioStore.loading && <Spin size="large" />}
+    {portfolioStore.error && <Alert message={portfolioStore.error} type="error" />}
+    <div className="header">Stock Portfolio</div>
+      <div className="search-bar">
         <Search
           placeholder="Search stocks"
           onSearch={handleSearch}
-          onChange={e => handleSearch(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
           style={{ marginBottom: '20px' }}
         />
       </div>
+
+      {/* Add Stock Button */}
       <Button
         type="primary"
         onClick={() => {
@@ -113,14 +111,18 @@ const PortfolioPage: React.FC = observer(() => {
       >
         Add Stock
       </Button>
+
+      {/* Table */}
       <Table
-        dataSource={filteredPortfolio} // Use the filtered portfolio
+        dataSource={portfolioStore.filteredPortfolio} // Use filteredPortfolio from store
         columns={columns}
         rowKey="_id"
       />
+
+      {/* Modal for Adding/Editing Stocks */}
       <Modal
         title={isEditing ? 'Edit Stock' : 'Add Stock'}
-        open={isModalVisible} // Updated
+        open={isModalVisible}
         onOk={handleAddStock}
         onCancel={() => setIsModalVisible(false)}
       >
