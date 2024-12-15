@@ -6,6 +6,13 @@
 
 [Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
+
+## Setting Up the Database
+1. Start your MongoDB server.
+2. Run the seed script:
+   ```bash
+   node seed.js
+
 ## Run tasks
 
 To run the dev server for your app, use:

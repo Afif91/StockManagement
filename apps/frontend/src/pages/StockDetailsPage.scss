@@ -1,0 +1,13 @@
+.stock-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .stock-card {
+    width: 400px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+  }
+}

@@ -1,6 +1,9 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
+import './styles/global.scss';
+import 'antd/dist/reset.css';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
